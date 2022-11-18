@@ -1,0 +1,17 @@
+{
+  "name": "Javid",
+  "parts": {
+    "p1": {
+      "priority": 1,
+      "length": 900,
+      "height": 30,
+      "width": 100
+    },
+    "p2": {
+      "priority": 2,
+      "length": 850,
+      "height": 45,
+      "width": 90
+    }
+  }
+}
