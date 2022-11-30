@@ -1,6 +1,8 @@
 __author__ = "Javid Jooshesh, j.jooshesh@hva.nl"
 __version__ = "v1"
 
+"""_This script would only run inside the Grasshopper GHPython block using IronPython 2.7_"""
+
 import ghpythonlib.treehelpers as th
 import rhinoscriptsyntax as rs
 import Grasshopper.Kernel.Data as ghp
@@ -277,12 +279,13 @@ class LinearElement:
         self.line = []
         for l in line:
             self.line.append(l)
-#        self.line = line
+
         self.length = [rs.CurveLength(l) for l in self.line]
         self.start_point = [rs.CurvePoints(l)[0] for l in self.line]
         self.end_point = [rs.CurvePoints(l)[1] for l in self.line]
         self.normal_axis = []
         self.normal = []
+        
         for i in range(len(self.start_point)):
             self.normal_axis.append(rs.VectorCreate(self.end_point[i], self.start_point[i]))
             self.normal.append(rs.PlaneFromNormal(self.start_point[i], self.normal_axis[i]))
@@ -302,49 +305,54 @@ class LinearElement:
     def pick_element(self, available_length):
         """_Select elements to build linear parts. Check the ratio
             of width and height as well_"""
-            
+
         blocks_dict = {}
-        lengths = th.tree_to_list(self.blocks.get_block_length())
+        lengths = sorted(th.tree_to_list(self.blocks.get_block_length()))
+
         filtered_blocks = self.filter_used_blocks()
         list_of_available_blocks = [self.blocks.source[i] for i in filtered_blocks]
-        
+
         self.base = [rs.ExplodePolysurfaces(b)[1] for b in list_of_available_blocks]
         heights = [rs.SurfaceDomain(b, 1)[1] for b in self.base]
         widths = [rs.SurfaceDomain(b, 0)[1] for b in self.base]
-        
+
         ratio = [widths[i] / heights[i] for i in range(len(heights))]
-        
-        # Maybe Sort the lengths and parts with them.
-        
+
         for i in range(len(list_of_available_blocks)):
-#            if 1 < ratio[i] < 6:
-            length = lengths[i][0]
-            blocks_dict[length] = list_of_available_blocks[i]
+            if 1 < ratio[i] < 4:
+                length = lengths[i][0]
+                blocks_dict[length] = list_of_available_blocks[i]
+
+        diff = []
+
         for l in available_length:
-            for length, block in blocks_dict.items():
-                if l - 5 <= length <= l + 5:
-                    self.selection.append(block)
-                    del blocks_dict[length]
+            inner = []
+            for key, value in blocks_dict.items():
+                inner.append(key)
+                if 0 < key - l < 4:
+                    diff.append(key - l) 
+                    self.selection.append(value)
+                    del blocks_dict[key]
                     
                     for index, item in enumerate(list_of_available_blocks):
-                        if item == block:
+                        if item == value:
                             self.index_list.append(index)
-                        
+
         return th.list_to_tree(ratio, source=[0])
 
 
 if __name__ == "__main__":
     objects = Blocks(wood_from_db)
     des_boundary = DesignRegion(design_boundary, 0)
-    
+
     edge = des_boundary.find_edge(edge_index, srf_index)
     edge_2 = des_boundary.find_edge(0, srf_index)
     edge_3 = des_boundary.find_edge(1, srf_index)
     length = rs.CurveLength(edge)
     width = rs.CurveLength(edge_2)
-    
+
     test = DesignModel(design_boundary, wood_from_db, heights, srf_index)
-  
+
     evaluated_points = test.fit_blocks(length, width, height)
     all_blocks = test.blocks.source
     packed_indecies = test.index_list
@@ -352,18 +360,17 @@ if __name__ == "__main__":
 
     normal = []
     li = []
-    
+
     a = LinearElement(line_segment, wood_from_db, packed_indecies)
     available_length = []
-    
+
     for i in line_segment:
         available_length.append(rs.CurveLength(i))
-    
+
     ratios = a.pick_element(available_length)
     normal.append(a.normal)
     li.append(a.index_list)
-    
+
     linear_indecies = th.list_to_tree(li, source=[0])
     linear_selection = a.selection
     normal = th.list_to_tree(normal, source=[0])
-    
