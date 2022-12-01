@@ -2,25 +2,25 @@ from flask_smorest import abort, Blueprint
 from flask.views import MethodView
 from db import db
 from sqlalchemy.exc import SQLAlchemyError
-from models import WoodModel
+from models import ResidualWoodModel
 from schema import WoodSchema
 
 
 blp = Blueprint('DataWood', 'wood', description='Operations on the wood')
 
 
-@blp.route('/wood')
-class WoodList(MethodView):
+@blp.route('/residual_wood')
+class ResidualWoodList(MethodView):
 
     @blp.response(200, WoodSchema(many=True))
     def get(self):
-        wood = WoodModel.query.all()
+        wood = ResidualWoodModel.query.all()
         return wood
 
     @blp.arguments(WoodSchema)
     @blp.response(201, WoodSchema)
     def post(self, parsed_data):
-        wood = WoodModel(**parsed_data)
+        wood = ResidualWoodModel(**parsed_data)
         try:
             db.session.add(wood)
             db.session.commit()
@@ -29,17 +29,17 @@ class WoodList(MethodView):
         return wood
 
 
-@blp.route('/wood/<int:wood_id>')
-class Wood(MethodView):
+@blp.route('/residual_wood/<int:wood_id>')
+class ResidualWood(MethodView):
 
     @blp.response(200, WoodSchema)
     def get(self, wood_id):
-        wood = WoodModel.query.get_or_404(wood_id)
+        wood = ResidualWoodModel.query.get_or_404(wood_id)
         return wood
 
     @blp.response(200, WoodSchema)
     def delete(self, wood_id):
-        wood = WoodModel.query.get_or_404(wood_id)
+        wood = ResidualWoodModel.query.get_or_404(wood_id)
         db.session.delete(wood)
         db.session.commit()
         return {
