@@ -5,5 +5,8 @@
   "weight": 155.0,
   "density": 320,
   "color": "180, 200, 119",
-  "timestamp": "2022-11-24 18:01:30"
+  "timestamp": "2022-11-24 18:01:30",
+  "contains_metal": 1,
+  "damaged": 0,
+  "stained": 1
 }

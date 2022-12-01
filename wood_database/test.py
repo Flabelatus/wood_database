@@ -8,7 +8,7 @@ def add_wood():
     with open(base_file) as wood_json:
         data = json.load(wood_json)
 
-    response = api_call("/wood", payload=data, method="POST")
+    response = api_call("/waste_wood", payload=data, method="POST")
     print(response)
 
 

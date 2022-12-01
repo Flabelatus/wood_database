@@ -11,3 +11,9 @@ class WoodSchema(Schema):
     timestamp = fields.Str(required=True)
     color = fields.Str(required=True)
 
+
+class WasteWoodSchema(WoodSchema):
+    contains_metal = fields.Bool(required=True)
+    damaged = fields.Bool(required=True)
+    stained = fields.Bool(required=True)
+
