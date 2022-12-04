@@ -15,7 +15,8 @@ def search(base_array, array_to_search_from):
                 continue
             else:
                 hashset.add(closest)
-                found_closest_values.append(closest)
                 new_search_target_array.remove(closest)
+                if len(found_closest_values) < len(base_array):
+                    found_closest_values.append(closest)
 
     return found_closest_values
