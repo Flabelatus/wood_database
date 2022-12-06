@@ -1,3 +1,8 @@
+"""
+__Author__ Javid Jooshesh, j.jooshesh@hva.nl
+_The API for the wood database and backend_
+"""
+
 from flask_smorest import abort, Blueprint
 from flask.views import MethodView
 from db import db
