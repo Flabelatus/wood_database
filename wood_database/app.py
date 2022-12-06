@@ -1,3 +1,8 @@
+"""
+__Author__ Javid Jooshesh, j.jooshesh@hva.nl
+_Flask App to serve the wood API and database_
+"""
+
 import os
 
 from flask import Flask
