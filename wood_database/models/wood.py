@@ -1,3 +1,8 @@
+"""
+__Author__ Javid Jooshesh, j.jooshesh@hva.nl
+_Database model for residaul and waste wood_
+"""
+
 from db import db
 
 
