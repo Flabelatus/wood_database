@@ -1,3 +1,8 @@
+"""
+__Author__ Javid Jooshesh, j.jooshesh@hva.nl
+_A function to search the from a list to look for closest members_
+"""
+
 def find_nearest(array, value):
     return array[min(range(len(array)), key=lambda i: abs(array[i] - value))]
 
