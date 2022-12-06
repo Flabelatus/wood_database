@@ -1,3 +1,8 @@
+"""
+__Author__ Javid Jooshesh, j.jooshesh@hva.nl
+_Database schema for data validation_
+"""
+
 from marshmallow import fields, Schema
 
 
